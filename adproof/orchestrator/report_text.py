@@ -51,6 +51,9 @@ def render(report: AuditReport) -> str:
         if report.repair.image_edit_instructions:
             out.append("Image still needs editing (copy changes cannot fix the picture):")
             out += [f"• {x}" for x in report.repair.image_edit_instructions]
+    if report.repair and not report.repair.repaired_copy:
+        out.append("")
+        out.append("Repair could not be completed: " + "; ".join(f"{e.code} ({e.message})" for e in report.repair.errors[:2]))
     if report.revised_audit:
         r = report.revised_audit
         out.append(f"Re-audit of the rewrite: {LABEL[r.decision]} · {len(r.issues)} issue(s)")

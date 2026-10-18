@@ -100,9 +100,9 @@ class GeminiClient:
                     msg = str(exc)
                     if any(s in msg for s in ("API key", "401", "403", "PERMISSION", "not found", "404")):
                         raise ModelError("MODEL_AUTH_OR_MODEL_ERROR", f"{task}: {type(exc).__name__}: {msg[:160]}") from exc
-                    last_err = ModelError("MODEL_ERROR", f"{task}: {type(exc).__name__}", retryable=True)
+                    last_err = ModelError("MODEL_ERROR", f"{task}: {type(exc).__name__}: {msg[:200]}", retryable=True)
             telemetry.event("retry_scheduled", stage=task, attempt=attempt, error_code=getattr(last_err, "code", ""))
-            await asyncio.sleep(0.4)
+            await asyncio.sleep(1.5)
         assert last_err is not None
         raise last_err
 
