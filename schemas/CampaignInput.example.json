@@ -1,0 +1,26 @@
+{
+  "schema_version": "1.0",
+  "request_id": "client-generated-id",
+  "campaign_id": "aerobeat-demo",
+  "creative_version": 1,
+  "creative": {
+    "image_url": "https://raw.githubusercontent.com/Khokon0123/AdProof/main/data/fixtures/aerobeat_neutral.png",
+    "ad_copy": "AeroBeat headphones are completely waterproof. Get 48-hour battery life with noise cancellation off. Recommended by 1,000 athletes. Now $60—50% off!"
+  },
+  "landing_page_url": "https://raw.githubusercontent.com/Khokon0123/AdProof/main/data/fixtures/aerobeat.html",
+  "context": {
+    "platform": "google_ads",
+    "jurisdiction": "US",
+    "language": "en",
+    "audience": "adults",
+    "product_category": "electronics"
+  },
+  "evidence_documents": [],
+  "product_context": {
+    "model": "AB-01",
+    "variant": "standard",
+    "currency": "USD",
+    "quantity": 1
+  },
+  "repair_mode": "repair_once"
+}

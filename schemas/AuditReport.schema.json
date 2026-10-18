@@ -1,0 +1,1344 @@
+{
+  "$defs": {
+    "Action": {
+      "enum": [
+        "FIX",
+        "REVIEW",
+        "BLOCK"
+      ],
+      "title": "Action",
+      "type": "string"
+    },
+    "CampaignContext": {
+      "additionalProperties": false,
+      "properties": {
+        "audience": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Audience"
+        },
+        "jurisdiction": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Jurisdiction"
+        },
+        "language": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Language"
+        },
+        "platform": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Platform"
+        },
+        "product_category": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Product Category"
+        }
+      },
+      "title": "CampaignContext",
+      "type": "object"
+    },
+    "Claim": {
+      "additionalProperties": false,
+      "properties": {
+        "claim": {
+          "title": "Claim",
+          "type": "string"
+        },
+        "claim_type": {
+          "$ref": "#/$defs/ClaimType"
+        },
+        "conditions": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Conditions"
+        },
+        "confidence": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Confidence"
+        },
+        "derivation": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Derivation"
+        },
+        "evidence_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence Ids",
+          "type": "array"
+        },
+        "evidence_quality": {
+          "default": "NONE",
+          "enum": [
+            "DIRECT",
+            "QUALIFIED",
+            "WEAK",
+            "NONE"
+          ],
+          "title": "Evidence Quality",
+          "type": "string"
+        },
+        "explanation": {
+          "title": "Explanation",
+          "type": "string"
+        },
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "landing_page_consistency": {
+          "default": "NOT_ASSESSED",
+          "enum": [
+            "MATCH",
+            "MISMATCH",
+            "NOT_FOUND",
+            "NOT_ASSESSED"
+          ],
+          "title": "Landing Page Consistency",
+          "type": "string"
+        },
+        "observation_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Observation Id"
+        },
+        "source": {
+          "enum": [
+            "ad_text",
+            "image"
+          ],
+          "title": "Source",
+          "type": "string"
+        },
+        "status": {
+          "$ref": "#/$defs/ClaimStatus"
+        },
+        "uncertainty": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Uncertainty"
+        }
+      },
+      "required": [
+        "id",
+        "claim",
+        "source",
+        "claim_type",
+        "status",
+        "explanation"
+      ],
+      "title": "Claim",
+      "type": "object"
+    },
+    "ClaimStatus": {
+      "enum": [
+        "SUPPORTED",
+        "CONTRADICTED",
+        "INSUFFICIENT_EVIDENCE"
+      ],
+      "title": "ClaimStatus",
+      "type": "string"
+    },
+    "ClaimType": {
+      "enum": [
+        "price",
+        "discount",
+        "quantitative_specification",
+        "performance",
+        "health",
+        "comparison",
+        "endorsement",
+        "guarantee",
+        "environmental",
+        "urgency_scarcity",
+        "other_objective"
+      ],
+      "title": "ClaimType",
+      "type": "string"
+    },
+    "CopyChange": {
+      "additionalProperties": false,
+      "properties": {
+        "after": {
+          "title": "After",
+          "type": "string"
+        },
+        "before": {
+          "title": "Before",
+          "type": "string"
+        },
+        "issue_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Issue Ids",
+          "type": "array"
+        }
+      },
+      "required": [
+        "issue_ids",
+        "before",
+        "after"
+      ],
+      "title": "CopyChange",
+      "type": "object"
+    },
+    "Coverage": {
+      "additionalProperties": false,
+      "properties": {
+        "ad_text": {
+          "$ref": "#/$defs/CoverageItem"
+        },
+        "image": {
+          "$ref": "#/$defs/CoverageItem"
+        },
+        "landing_page": {
+          "$ref": "#/$defs/CoverageItem"
+        },
+        "platform_policy": {
+          "$ref": "#/$defs/CoverageItem"
+        },
+        "supporting_documents": {
+          "$ref": "#/$defs/CoverageItem"
+        }
+      },
+      "required": [
+        "ad_text",
+        "landing_page",
+        "supporting_documents",
+        "image",
+        "platform_policy"
+      ],
+      "title": "Coverage",
+      "type": "object"
+    },
+    "CoverageItem": {
+      "additionalProperties": false,
+      "properties": {
+        "reason": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Reason"
+        },
+        "status": {
+          "$ref": "#/$defs/CoverageStatus"
+        }
+      },
+      "required": [
+        "status"
+      ],
+      "title": "CoverageItem",
+      "type": "object"
+    },
+    "CoverageStatus": {
+      "enum": [
+        "CHECKED",
+        "PARTIAL",
+        "NOT_CHECKED",
+        "FAILED",
+        "NOT_APPLICABLE"
+      ],
+      "title": "CoverageStatus",
+      "type": "string"
+    },
+    "CreativeCandidate": {
+      "additionalProperties": false,
+      "properties": {
+        "ad_copy": {
+          "title": "Ad Copy",
+          "type": "string"
+        },
+        "campaign_id": {
+          "title": "Campaign Id",
+          "type": "string"
+        },
+        "candidate_id": {
+          "title": "Candidate Id",
+          "type": "string"
+        },
+        "context": {
+          "$ref": "#/$defs/CampaignContext"
+        },
+        "created_at": {
+          "format": "date-time",
+          "title": "Created At",
+          "type": "string"
+        },
+        "creative_version": {
+          "title": "Creative Version",
+          "type": "integer"
+        },
+        "image": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/FrozenImage"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "phase": {
+          "$ref": "#/$defs/Phase"
+        },
+        "product_context": {
+          "$ref": "#/$defs/ProductContext",
+          "default": {
+            "currency": null,
+            "model": null,
+            "quantity": null,
+            "variant": null
+          }
+        }
+      },
+      "required": [
+        "campaign_id",
+        "candidate_id",
+        "creative_version",
+        "phase",
+        "ad_copy",
+        "context"
+      ],
+      "title": "CreativeCandidate",
+      "type": "object"
+    },
+    "Decision": {
+      "enum": [
+        "PASS",
+        "FIX_REQUIRED",
+        "BLOCK",
+        "HUMAN_REVIEW"
+      ],
+      "title": "Decision",
+      "type": "string"
+    },
+    "Evidence": {
+      "additionalProperties": false,
+      "properties": {
+        "content_sha256": {
+          "title": "Content Sha256",
+          "type": "string"
+        },
+        "document_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Document Id"
+        },
+        "excerpt": {
+          "title": "Excerpt",
+          "type": "string"
+        },
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "locator": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Locator"
+        },
+        "retrieved_at": {
+          "format": "date-time",
+          "title": "Retrieved At",
+          "type": "string"
+        },
+        "snapshot_id": {
+          "title": "Snapshot Id",
+          "type": "string"
+        },
+        "source_type": {
+          "enum": [
+            "seller_product_information",
+            "substantiation",
+            "policy_text"
+          ],
+          "title": "Source Type",
+          "type": "string"
+        },
+        "source_url": {
+          "title": "Source Url",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "source_url",
+        "excerpt",
+        "source_type",
+        "retrieved_at",
+        "snapshot_id",
+        "content_sha256"
+      ],
+      "title": "Evidence",
+      "type": "object"
+    },
+    "ExecutionMode": {
+      "enum": [
+        "LIVE",
+        "MOCK",
+        "TRANSPORT_TEST"
+      ],
+      "title": "ExecutionMode",
+      "type": "string"
+    },
+    "FrozenImage": {
+      "additionalProperties": false,
+      "properties": {
+        "height": {
+          "title": "Height",
+          "type": "integer"
+        },
+        "model_input_sha256": {
+          "title": "Model Input Sha256",
+          "type": "string"
+        },
+        "source_format": {
+          "title": "Source Format",
+          "type": "string"
+        },
+        "source_image_sha256": {
+          "title": "Source Image Sha256",
+          "type": "string"
+        },
+        "source_url": {
+          "title": "Source Url",
+          "type": "string"
+        },
+        "transformation": {
+          "default": "decoded, metadata stripped, re-encoded as PNG",
+          "title": "Transformation",
+          "type": "string"
+        },
+        "width": {
+          "title": "Width",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "source_image_sha256",
+        "model_input_sha256",
+        "source_url",
+        "width",
+        "height",
+        "source_format"
+      ],
+      "title": "FrozenImage",
+      "type": "object"
+    },
+    "IgnoredStatement": {
+      "additionalProperties": false,
+      "properties": {
+        "reason": {
+          "title": "Reason",
+          "type": "string"
+        },
+        "text": {
+          "title": "Text",
+          "type": "string"
+        }
+      },
+      "required": [
+        "text",
+        "reason"
+      ],
+      "title": "IgnoredStatement",
+      "type": "object"
+    },
+    "InspectionResult": {
+      "additionalProperties": false,
+      "properties": {
+        "cache_hit": {
+          "default": false,
+          "title": "Cache Hit",
+          "type": "boolean"
+        },
+        "candidate_id": {
+          "title": "Candidate Id",
+          "type": "string"
+        },
+        "errors": {
+          "items": {
+            "$ref": "#/$defs/TypedError"
+          },
+          "title": "Errors",
+          "type": "array"
+        },
+        "image_sha256": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Image Sha256"
+        },
+        "model": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Model"
+        },
+        "observations": {
+          "items": {
+            "$ref": "#/$defs/Observation"
+          },
+          "title": "Observations",
+          "type": "array"
+        },
+        "prompt_version": {
+          "title": "Prompt Version",
+          "type": "string"
+        },
+        "readable": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Readable"
+        },
+        "status": {
+          "$ref": "#/$defs/InspectionStatus"
+        },
+        "uncertainty": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Uncertainty"
+        }
+      },
+      "required": [
+        "candidate_id",
+        "image_sha256",
+        "model",
+        "prompt_version",
+        "status"
+      ],
+      "title": "InspectionResult",
+      "type": "object"
+    },
+    "InspectionStatus": {
+      "enum": [
+        "COMPLETE",
+        "PARTIAL",
+        "FAILED",
+        "NOT_PROVIDED"
+      ],
+      "title": "InspectionStatus",
+      "type": "string"
+    },
+    "Issue": {
+      "additionalProperties": false,
+      "properties": {
+        "action": {
+          "$ref": "#/$defs/Action"
+        },
+        "category": {
+          "$ref": "#/$defs/IssueCategory"
+        },
+        "claim_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Claim Id"
+        },
+        "explanation": {
+          "title": "Explanation",
+          "type": "string"
+        },
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "policy_reference": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Policy Reference"
+        },
+        "severity": {
+          "$ref": "#/$defs/Severity"
+        },
+        "source": {
+          "default": "ad_text",
+          "enum": [
+            "ad_text",
+            "image",
+            "process"
+          ],
+          "title": "Source",
+          "type": "string"
+        },
+        "subtype": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Subtype"
+        },
+        "suggested_fix": {
+          "title": "Suggested Fix",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "claim_id",
+        "category",
+        "severity",
+        "explanation",
+        "suggested_fix",
+        "action"
+      ],
+      "title": "Issue",
+      "type": "object"
+    },
+    "IssueCategory": {
+      "enum": [
+        "UNSUPPORTED_OBJECTIVE_CLAIM",
+        "PRICE_DISCOUNT_MISMATCH",
+        "UNVERIFIED_ENDORSEMENT",
+        "MISSING_REQUIRED_DISCLOSURE",
+        "AD_LANDING_PAGE_CONTRADICTION"
+      ],
+      "title": "IssueCategory",
+      "type": "string"
+    },
+    "Metrics": {
+      "additionalProperties": false,
+      "properties": {
+        "cache_hits": {
+          "default": 0,
+          "title": "Cache Hits",
+          "type": "integer"
+        },
+        "duration_ms": {
+          "default": 0,
+          "title": "Duration Ms",
+          "type": "integer"
+        },
+        "fetches": {
+          "default": 0,
+          "title": "Fetches",
+          "type": "integer"
+        },
+        "model_calls": {
+          "default": 0,
+          "title": "Model Calls",
+          "type": "integer"
+        }
+      },
+      "title": "Metrics",
+      "type": "object"
+    },
+    "Observation": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "enum": [
+            "visible_text",
+            "visual_observation",
+            "inferred_claim"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "observation_id": {
+          "title": "Observation Id",
+          "type": "string"
+        },
+        "region": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Region"
+        },
+        "text": {
+          "title": "Text",
+          "type": "string"
+        },
+        "uncertainty": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Uncertainty"
+        }
+      },
+      "required": [
+        "observation_id",
+        "kind",
+        "text"
+      ],
+      "title": "Observation",
+      "type": "object"
+    },
+    "Phase": {
+      "enum": [
+        "ORIGINAL",
+        "REPAIRED"
+      ],
+      "title": "Phase",
+      "type": "string"
+    },
+    "PolicyCheck": {
+      "additionalProperties": false,
+      "properties": {
+        "applicable": {
+          "title": "Applicable",
+          "type": "boolean"
+        },
+        "note": {
+          "title": "Note",
+          "type": "string"
+        },
+        "rule_id": {
+          "title": "Rule Id",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "ACTIVE",
+            "DRAFT",
+            "DISABLED"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "violated": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Violated"
+        }
+      },
+      "required": [
+        "rule_id",
+        "applicable",
+        "violated",
+        "status",
+        "note"
+      ],
+      "title": "PolicyCheck",
+      "type": "object"
+    },
+    "ProductContext": {
+      "additionalProperties": false,
+      "properties": {
+        "currency": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Currency"
+        },
+        "model": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Model"
+        },
+        "quantity": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Quantity"
+        },
+        "variant": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Variant"
+        }
+      },
+      "title": "ProductContext",
+      "type": "object"
+    },
+    "RepairResult": {
+      "additionalProperties": false,
+      "properties": {
+        "audit_id": {
+          "title": "Audit Id",
+          "type": "string"
+        },
+        "candidate_id": {
+          "title": "Candidate Id",
+          "type": "string"
+        },
+        "changes": {
+          "items": {
+            "$ref": "#/$defs/CopyChange"
+          },
+          "title": "Changes",
+          "type": "array"
+        },
+        "errors": {
+          "items": {
+            "$ref": "#/$defs/TypedError"
+          },
+          "title": "Errors",
+          "type": "array"
+        },
+        "image_edit_instructions": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Image Edit Instructions",
+          "type": "array"
+        },
+        "model": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Model"
+        },
+        "original_candidate_id": {
+          "title": "Original Candidate Id",
+          "type": "string"
+        },
+        "prompt_version": {
+          "title": "Prompt Version",
+          "type": "string"
+        },
+        "repaired_copy": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Repaired Copy"
+        },
+        "unresolved_issue_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Unresolved Issue Ids",
+          "type": "array"
+        }
+      },
+      "required": [
+        "audit_id",
+        "original_candidate_id",
+        "candidate_id",
+        "repaired_copy",
+        "prompt_version"
+      ],
+      "title": "RepairResult",
+      "type": "object"
+    },
+    "Severity": {
+      "enum": [
+        "low",
+        "medium",
+        "high",
+        "critical"
+      ],
+      "title": "Severity",
+      "type": "string"
+    },
+    "TypedError": {
+      "additionalProperties": false,
+      "properties": {
+        "code": {
+          "title": "Code",
+          "type": "string"
+        },
+        "message": {
+          "title": "Message",
+          "type": "string"
+        },
+        "retryable": {
+          "default": false,
+          "title": "Retryable",
+          "type": "boolean"
+        },
+        "stage": {
+          "title": "Stage",
+          "type": "string"
+        }
+      },
+      "required": [
+        "code",
+        "message",
+        "stage"
+      ],
+      "title": "TypedError",
+      "type": "object"
+    },
+    "VerificationResult": {
+      "additionalProperties": false,
+      "properties": {
+        "audit_complete": {
+          "title": "Audit Complete",
+          "type": "boolean"
+        },
+        "audit_id": {
+          "title": "Audit Id",
+          "type": "string"
+        },
+        "campaign_id": {
+          "title": "Campaign Id",
+          "type": "string"
+        },
+        "candidate_id": {
+          "title": "Candidate Id",
+          "type": "string"
+        },
+        "claims": {
+          "items": {
+            "$ref": "#/$defs/Claim"
+          },
+          "title": "Claims",
+          "type": "array"
+        },
+        "coverage": {
+          "$ref": "#/$defs/Coverage"
+        },
+        "creative_version": {
+          "title": "Creative Version",
+          "type": "integer"
+        },
+        "decision": {
+          "$ref": "#/$defs/Decision"
+        },
+        "errors": {
+          "items": {
+            "$ref": "#/$defs/TypedError"
+          },
+          "title": "Errors",
+          "type": "array"
+        },
+        "evidence": {
+          "items": {
+            "$ref": "#/$defs/Evidence"
+          },
+          "title": "Evidence",
+          "type": "array"
+        },
+        "evidence_scope": {
+          "title": "Evidence Scope",
+          "type": "string"
+        },
+        "ignored_statements": {
+          "items": {
+            "$ref": "#/$defs/IgnoredStatement"
+          },
+          "title": "Ignored Statements",
+          "type": "array"
+        },
+        "issues": {
+          "items": {
+            "$ref": "#/$defs/Issue"
+          },
+          "title": "Issues",
+          "type": "array"
+        },
+        "metrics": {
+          "$ref": "#/$defs/Metrics",
+          "default": {
+            "cache_hits": 0,
+            "duration_ms": 0,
+            "fetches": 0,
+            "model_calls": 0
+          }
+        },
+        "phase": {
+          "$ref": "#/$defs/Phase"
+        },
+        "policy_catalog_version": {
+          "title": "Policy Catalog Version",
+          "type": "string"
+        },
+        "policy_checks": {
+          "items": {
+            "$ref": "#/$defs/PolicyCheck"
+          },
+          "title": "Policy Checks",
+          "type": "array"
+        },
+        "schema_version": {
+          "default": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "scope_notes": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Scope Notes",
+          "type": "array"
+        }
+      },
+      "required": [
+        "audit_id",
+        "campaign_id",
+        "candidate_id",
+        "creative_version",
+        "phase",
+        "decision",
+        "audit_complete",
+        "evidence_scope",
+        "coverage",
+        "policy_catalog_version"
+      ],
+      "title": "VerificationResult",
+      "type": "object"
+    },
+    "WorkflowStatus": {
+      "enum": [
+        "COMPLETED",
+        "PARTIAL",
+        "FAILED"
+      ],
+      "title": "WorkflowStatus",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "audit_id": {
+      "title": "Audit Id",
+      "type": "string"
+    },
+    "duration_ms": {
+      "title": "Duration Ms",
+      "type": "integer"
+    },
+    "errors": {
+      "items": {
+        "$ref": "#/$defs/TypedError"
+      },
+      "title": "Errors",
+      "type": "array"
+    },
+    "execution_mode": {
+      "$ref": "#/$defs/ExecutionMode"
+    },
+    "final_decision": {
+      "$ref": "#/$defs/Decision"
+    },
+    "final_decision_basis": {
+      "title": "Final Decision Basis",
+      "type": "string"
+    },
+    "finished_at": {
+      "format": "date-time",
+      "title": "Finished At",
+      "type": "string"
+    },
+    "model": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Model"
+    },
+    "model_calls": {
+      "default": 0,
+      "title": "Model Calls",
+      "type": "integer"
+    },
+    "original_audit": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/VerificationResult"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "original_candidate": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/CreativeCandidate"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "original_inspection": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/InspectionResult"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "policy_catalog_version": {
+      "title": "Policy Catalog Version",
+      "type": "string"
+    },
+    "repair": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/RepairResult"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "repair_verified": {
+      "default": false,
+      "title": "Repair Verified",
+      "type": "boolean"
+    },
+    "revised_audit": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/VerificationResult"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "revised_candidate": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/CreativeCandidate"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "schema_version": {
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "scope": {
+      "title": "Scope",
+      "type": "string"
+    },
+    "selected_candidate_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Selected Candidate Id"
+    },
+    "started_at": {
+      "format": "date-time",
+      "title": "Started At",
+      "type": "string"
+    },
+    "workflow_status": {
+      "$ref": "#/$defs/WorkflowStatus"
+    }
+  },
+  "required": [
+    "audit_id",
+    "execution_mode",
+    "workflow_status",
+    "scope",
+    "original_candidate",
+    "original_inspection",
+    "original_audit",
+    "selected_candidate_id",
+    "final_decision",
+    "final_decision_basis",
+    "policy_catalog_version",
+    "started_at",
+    "finished_at",
+    "duration_ms"
+  ],
+  "title": "AuditReport",
+  "type": "object"
+}

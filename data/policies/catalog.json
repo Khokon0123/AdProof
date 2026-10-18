@@ -1,0 +1,78 @@
+{
+  "catalog_version": "google_ads_us_electronics_v1-draft-2026-10-17",
+  "rule_pack": {
+    "id": "google_ads_us_electronics_v1",
+    "platform": "google_ads",
+    "jurisdiction": "US",
+    "required_implemented_checks": [
+      "price_consistency_with_landing_page",
+      "discount_arithmetic",
+      "ad_vs_landing_page_factual_consistency",
+      "endorsement_substantiation_present",
+      "image_price_consistency"
+    ],
+    "note": "The required checks above are AdProof engineering checks (deterministic arithmetic and quote-validated consistency). They are not legal rules. Platform policy sections below are DRAFT and never decide outcomes until a human reviews them."
+  },
+  "rules": [
+    {
+      "rule_id": "GADS-MISREP-DRAFT",
+      "title": "Google Ads policy: Misrepresentation",
+      "url": "https://support.google.com/adspolicy/answer/6020955",
+      "section": "To be selected by a human reviewer",
+      "excerpt": null,
+      "retrieved_at": null,
+      "review_status": "DRAFT",
+      "review": {"kind": null, "reviewer": null, "reviewed_at": null},
+      "issue_mapping": ["AD_LANDING_PAGE_CONTRADICTION", "UNSUPPORTED_OBJECTIVE_CLAIM"],
+      "implementation_note": "Context only. Not used for decisions."
+    },
+    {
+      "rule_id": "GADS-PRICING-DRAFT",
+      "title": "Google Ads policy: Dishonest pricing practices",
+      "url": "https://support.google.com/adspolicy/answer/15938375",
+      "section": "To be selected by a human reviewer",
+      "excerpt": null,
+      "retrieved_at": null,
+      "review_status": "DRAFT",
+      "review": {"kind": null, "reviewer": null, "reviewed_at": null},
+      "issue_mapping": ["PRICE_DISCOUNT_MISMATCH"],
+      "implementation_note": "Context only. Not used for decisions."
+    },
+    {
+      "rule_id": "GADS-UNRELIABLE-DRAFT",
+      "title": "Google Ads policy: Unreliable claims",
+      "url": "https://support.google.com/adspolicy/answer/15936857",
+      "section": "To be selected by a human reviewer",
+      "excerpt": null,
+      "retrieved_at": null,
+      "review_status": "DRAFT",
+      "review": {"kind": null, "reviewer": null, "reviewed_at": null},
+      "issue_mapping": ["UNSUPPORTED_OBJECTIVE_CLAIM"],
+      "implementation_note": "Context only. Not used for decisions."
+    },
+    {
+      "rule_id": "FTC-SUBSTANTIATION-DRAFT",
+      "title": "FTC Policy Statement Regarding Advertising Substantiation",
+      "url": "https://www.ftc.gov/legal-library/browse/ftc-policy-statement-regarding-advertising-substantiation",
+      "section": "To be selected by a human reviewer",
+      "excerpt": null,
+      "retrieved_at": null,
+      "review_status": "DRAFT",
+      "review": {"kind": null, "reviewer": null, "reviewed_at": null},
+      "issue_mapping": ["UNSUPPORTED_OBJECTIVE_CLAIM"],
+      "implementation_note": "Context only. Not used for decisions."
+    },
+    {
+      "rule_id": "FTC-ENDORSEMENTS-DRAFT",
+      "title": "FTC endorsements, influencers and reviews guidance",
+      "url": "https://www.ftc.gov/business-guidance/advertising-marketing/endorsements-influencers-reviews",
+      "section": "To be selected by a human reviewer",
+      "excerpt": null,
+      "retrieved_at": null,
+      "review_status": "DRAFT",
+      "review": {"kind": null, "reviewer": null, "reviewed_at": null},
+      "issue_mapping": ["UNVERIFIED_ENDORSEMENT"],
+      "implementation_note": "Context only. Not used for decisions."
+    }
+  ]
+}

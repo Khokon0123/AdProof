@@ -1,0 +1,11 @@
+# Pinned to the versions this build was tested with (Python 3.11–3.14).
+uagents==0.26.1
+uagents-core==0.4.12
+pydantic>=2.7,<3
+google-genai==2.31.0
+sentry-sdk==2.72.0
+httpx>=0.27,<1
+beautifulsoup4>=4.12,<5
+pillow>=10.1
+python-dotenv>=1.0
+pytest>=8

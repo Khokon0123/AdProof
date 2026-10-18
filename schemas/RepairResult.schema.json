@@ -1,0 +1,139 @@
+{
+  "$defs": {
+    "CopyChange": {
+      "additionalProperties": false,
+      "properties": {
+        "after": {
+          "title": "After",
+          "type": "string"
+        },
+        "before": {
+          "title": "Before",
+          "type": "string"
+        },
+        "issue_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Issue Ids",
+          "type": "array"
+        }
+      },
+      "required": [
+        "issue_ids",
+        "before",
+        "after"
+      ],
+      "title": "CopyChange",
+      "type": "object"
+    },
+    "TypedError": {
+      "additionalProperties": false,
+      "properties": {
+        "code": {
+          "title": "Code",
+          "type": "string"
+        },
+        "message": {
+          "title": "Message",
+          "type": "string"
+        },
+        "retryable": {
+          "default": false,
+          "title": "Retryable",
+          "type": "boolean"
+        },
+        "stage": {
+          "title": "Stage",
+          "type": "string"
+        }
+      },
+      "required": [
+        "code",
+        "message",
+        "stage"
+      ],
+      "title": "TypedError",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "audit_id": {
+      "title": "Audit Id",
+      "type": "string"
+    },
+    "candidate_id": {
+      "title": "Candidate Id",
+      "type": "string"
+    },
+    "changes": {
+      "items": {
+        "$ref": "#/$defs/CopyChange"
+      },
+      "title": "Changes",
+      "type": "array"
+    },
+    "errors": {
+      "items": {
+        "$ref": "#/$defs/TypedError"
+      },
+      "title": "Errors",
+      "type": "array"
+    },
+    "image_edit_instructions": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Image Edit Instructions",
+      "type": "array"
+    },
+    "model": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Model"
+    },
+    "original_candidate_id": {
+      "title": "Original Candidate Id",
+      "type": "string"
+    },
+    "prompt_version": {
+      "title": "Prompt Version",
+      "type": "string"
+    },
+    "repaired_copy": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Repaired Copy"
+    },
+    "unresolved_issue_ids": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Unresolved Issue Ids",
+      "type": "array"
+    }
+  },
+  "required": [
+    "audit_id",
+    "original_candidate_id",
+    "candidate_id",
+    "repaired_copy",
+    "prompt_version"
+  ],
+  "title": "RepairResult",
+  "type": "object"
+}
