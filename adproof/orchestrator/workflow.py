@@ -131,8 +131,10 @@ async def run_audit(inp: CampaignInput, deps: WorkflowDeps, audit_id: Optional[s
                       selected_candidate_id=original.candidate_id, final_decision=orig_audit.decision,
                       final_decision_basis=basis)
 
+    # The repair + re-audit gets its own time window: a slow live audit must not starve the one repair.
+    repair_deadline = max(deadline, time.time() + deps.deadline_s - 5)
     return await _repair_phase(audit_id, inp.landing_page_url, inp.evidence_documents, original, inspection,
-                               orig_audit, frozen.model_bytes, deps, deadline, report, errors)
+                               orig_audit, frozen.model_bytes, deps, repair_deadline, report, errors)
 
 
 async def _repair_phase(audit_id, landing_page_url, evidence_documents, original, inspection, orig_audit,

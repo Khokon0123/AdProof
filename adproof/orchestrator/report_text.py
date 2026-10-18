@@ -63,6 +63,11 @@ def render(report: AuditReport) -> str:
     cov = (report.revised_audit or o).coverage
     out.append("Coverage: " + ", ".join(f"{k.replace('_', ' ')} {getattr(cov, k).status.value}"
                                         for k in ("ad_text", "landing_page", "image", "platform_policy")))
+    errs = list(report.errors) + list(o.errors) + list(report.original_inspection.errors if report.original_inspection else [])
+    seen = set()
+    errs = [e for e in errs if not (e.code + e.message in seen or seen.add(e.code + e.message))]
+    if errs:
+        out.append("Problems: " + "; ".join(f"{e.code} ({e.message[:140]})" for e in errs[:3]))
     out.append(DISCLAIMER)
     return "\n".join(out)
 

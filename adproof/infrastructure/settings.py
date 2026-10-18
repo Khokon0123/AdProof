@@ -32,7 +32,7 @@ class Settings:
     allow_public_hosts: bool = field(default_factory=lambda: os.environ.get("ADPROOF_ALLOW_PUBLIC_HOSTS", "0") == "1")
     fixture_base_url: str = field(default_factory=lambda: os.environ.get("ADPROOF_FIXTURE_BASE_URL", FIXTURE_BASE_DEFAULT).rstrip("/"))
     max_model_calls: int = field(default_factory=lambda: _int("ADPROOF_MAX_MODEL_CALLS", 20))
-    audit_deadline_s: int = field(default_factory=lambda: _int("ADPROOF_AUDIT_DEADLINE_S", 120))
+    audit_deadline_s: int = field(default_factory=lambda: _int("ADPROOF_AUDIT_DEADLINE_S", 180))
     inspection_cache: bool = field(default_factory=lambda: os.environ.get("ADPROOF_INSPECTION_CACHE", "1") == "1")
     state_db: str = field(default_factory=lambda: os.environ.get("ADPROOF_STATE_DB", "runtime/adproof_state.sqlite3"))
 

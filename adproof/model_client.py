@@ -2,7 +2,7 @@
 
 `GeminiClient` calls Gemini with the official google-genai SDK and validates the
 JSON against a Pydantic schema. `ScriptedModel` is the MOCK/test double. Both
-charge every call (including the one correction retry) to a shared CallBudget.
+charge every call (including retries) to a shared CallBudget.
 """
 from __future__ import annotations
 
@@ -46,6 +46,13 @@ class ModelClient(Protocol):
                        deadline: float, image: Optional[bytes] = None) -> T: ...
 
 
+def _retry_delay(msg: str) -> Optional[float]:
+    """Seconds Gemini asks us to wait (from 'retryDelay': '27s' or 'retry in 27.3s'), capped at 60."""
+    import re
+    m = re.search(r"retryDelay['\"]?:\s*['\"](\d+(?:\.\d+)?)s", msg) or re.search(r"retry in (\d+(?:\.\d+)?)\s*s", msg)
+    return min(float(m.group(1)) + 1, 60.0) if m else None
+
+
 def _remaining(deadline: float, cap: float) -> float:
     left = deadline - time.time()
     if left <= 1.0:
@@ -54,17 +61,21 @@ def _remaining(deadline: float, cap: float) -> float:
 
 
 class GeminiClient:
-    def __init__(self, api_key: str, model: str, call_timeout_s: float = 25.0):
+    def __init__(self, api_key: str, model: str, call_timeout_s: float = 25.0, fallback_model: Optional[str] = None):
         if not api_key:
             raise ModelError("MISSING_API_KEY", "GEMINI_API_KEY is not set; LIVE model calls are unavailable.")
+        import os
         from google import genai
 
         self._genai = genai
         self._client = genai.Client(api_key=api_key)
         self.name = model
+        # Used only when the primary model is overloaded (503) or out of quota (429).
+        fb = fallback_model if fallback_model is not None else os.environ.get("GEMINI_FALLBACK_MODEL", "")
+        self.fallback = fb.strip() or None
         self.call_timeout_s = call_timeout_s
 
-    async def _call(self, prompt: str, schema: type[T], image: Optional[bytes], timeout: float) -> str:
+    async def _call(self, model: str, prompt: str, schema: type[T], image: Optional[bytes], timeout: float) -> str:
         from google.genai import types
 
         contents: list = []
@@ -75,22 +86,25 @@ class GeminiClient:
             temperature=0, response_mime_type="application/json", response_schema=schema,
         )
         resp = await asyncio.wait_for(
-            self._client.aio.models.generate_content(model=self.name, contents=contents, config=config),
+            self._client.aio.models.generate_content(model=model, contents=contents, config=config),
             timeout=timeout)
         return resp.text or ""
 
     async def generate(self, *, task, prompt, schema, budget, deadline, image=None):
+        """Up to 3 bounded attempts inside the deadline. Overload/quota errors back off and, if a
+        fallback model is configured, switch to it. Auth and unknown-model errors fail at once."""
         last_err: Exception | None = None
-        for attempt in (1, 2):  # one bounded correction/transient retry, inside the same deadline
+        model, malformed = self.name, False
+        for attempt in (1, 2, 3):
             budget.reserve(f"{task}#{attempt}")
-            with telemetry.span("gen_ai.generate", f"gemini.{task}", model=self.name, attempt=attempt):
+            with telemetry.span("gen_ai.generate", f"gemini.{task}", model=model, attempt=attempt):
                 try:
-                    raw = await self._call(prompt if attempt == 1 else
-                                           prompt + "\n\nYour previous reply was not valid JSON for the schema. "
-                                           "Reply with JSON only.", schema, image,
-                                           _remaining(deadline, self.call_timeout_s))
+                    p = prompt + ("\n\nYour previous reply was not valid JSON for the schema. Reply with JSON only."
+                                  if malformed else "")
+                    raw = await self._call(model, p, schema, image, _remaining(deadline, self.call_timeout_s))
                     return schema.model_validate(json.loads(raw))
-                except (json.JSONDecodeError, ValidationError) as exc:
+                except (json.JSONDecodeError, ValidationError):
+                    malformed = True
                     last_err = ModelError("MALFORMED_MODEL_OUTPUT", f"{task}: output failed schema validation.")
                 except asyncio.TimeoutError:
                     last_err = ModelError("MODEL_TIMEOUT", f"{task}: model call timed out.", retryable=True)
@@ -98,9 +112,27 @@ class GeminiClient:
                     raise
                 except Exception as exc:  # SDK/auth/network errors
                     msg = str(exc)
+                    busy = "503" in msg or "UNAVAILABLE" in msg or "overloaded" in msg.lower()
+                    quota = "429" in msg or "RESOURCE_EXHAUSTED" in msg
+                    if busy or quota:
+                        last_err = ModelError("MODEL_RATE_LIMITED" if quota else "MODEL_OVERLOADED",
+                                              f"{task}: Gemini {'quota exceeded' if quota else 'is overloaded (503)'} "
+                                              f"on {model}.", retryable=True)
+                        if self.fallback and model != self.fallback:
+                            model = self.fallback
+                            telemetry.event("model_fallback", stage=task, model=model)
+                            continue
+                        wait = (_retry_delay(msg) if quota else None) or (2.0 * attempt)
+                        if attempt < 3 and time.time() + wait + 5 < deadline:
+                            telemetry.event("retry_scheduled", stage=task, attempt=attempt, error_code=last_err.code)
+                            await asyncio.sleep(wait)
+                            continue
+                        raise last_err from exc
                     if any(s in msg for s in ("API key", "401", "403", "PERMISSION", "not found", "404")):
                         raise ModelError("MODEL_AUTH_OR_MODEL_ERROR", f"{task}: {type(exc).__name__}: {msg[:160]}") from exc
                     last_err = ModelError("MODEL_ERROR", f"{task}: {type(exc).__name__}: {msg[:200]}", retryable=True)
+            if attempt == 2:
+                break  # malformed/timeout/other: one retry is enough
             telemetry.event("retry_scheduled", stage=task, attempt=attempt, error_code=getattr(last_err, "code", ""))
             await asyncio.sleep(1.5)
         assert last_err is not None
